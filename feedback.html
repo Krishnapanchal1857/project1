@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Feedback — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.content{padding:52px 60px;max-width:760px;margin:0 auto}
+.fb-box{background:white;border-radius:20px;padding:44px;box-shadow:var(--shadow)}
+.star-row{display:flex;gap:8px;margin-bottom:8px}
+.star-btn{background:none;border:none;font-size:2.2rem;cursor:pointer;color:#E0E0E0;transition:all 0.15s;line-height:1;padding:0}
+.star-btn.active{color:#F5A623}
+.star-btn:hover{transform:scale(1.2);color:#F5A623}
+.rating-label{font-size:0.82rem;color:var(--gray-400);margin-top:4px;height:18px}
+.success-screen{display:none;text-align:center;padding:40px}
+.success-icon{font-size:4.5rem;margin-bottom:18px}
+@media(max-width:900px){.content{padding:32px 20px}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+<div class="page-wrap">
+  <div class="page-band" data-bg="FEEDBACK">
+    <div class="page-band-title">💬 Share Your Feedback</div>
+    <div class="page-band-sub">Help us make SAKSHAR better for every student in India</div>
+  </div>
+  <div class="content">
+    <div class="fb-box">
+      <!-- FORM -->
+      <div id="fb-form">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;color:var(--navy);margin-bottom:6px">We Value Your Opinion 🙏</h2>
+        <p style="color:var(--gray-600);font-size:0.93rem;margin-bottom:28px">Your feedback shapes SAKSHAR. Tell us what's working, what's missing, and what would help you most.</p>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Your Name *</label><input type="text" class="form-input" id="fb-name" placeholder="Your full name"></div>
+          <div class="form-group">
+            <label class="form-label">Department *</label>
+            <select class="form-select" id="fb-dept"><option value="">Select department</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Overall Rating *</label>
+          <div class="star-row">
+            <button class="star-btn" onclick="setRating(1)">★</button>
+            <button class="star-btn" onclick="setRating(2)">★</button>
+            <button class="star-btn" onclick="setRating(3)">★</button>
+            <button class="star-btn" onclick="setRating(4)">★</button>
+            <button class="star-btn" onclick="setRating(5)">★</button>
+          </div>
+          <div class="rating-label" id="rating-label">Click to rate</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What do you like most about SAKSHAR?</label>
+          <textarea class="form-input" id="fb-like" placeholder="e.g., Organized resources, SMRITI AI, PYQ papers..." rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What should we improve?</label>
+          <textarea class="form-input" id="fb-improve" placeholder="e.g., Add more subjects, mobile app, better search..." rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Feedback Category</label>
+            <select class="form-select" id="fb-category">
+              <option value="">Select category</option>
+              <option>Resources Quality</option>
+              <option>Website Design</option>
+              <option>SMRITI AI Feature</option>
+              <option>Missing Subjects/Departments</option>
+              <option>Technical Bug</option>
+              <option>General Suggestion</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Would you recommend SAKSHAR?</label>
+            <select class="form-select" id="fb-recommend">
+              <option value="">Select</option>
+              <option value="yes">Yes, definitely! 👍</option>
+              <option value="maybe">Maybe</option>
+              <option value="not-yet">Not yet</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-saffron btn-full" onclick="submitFeedback()" style="margin-top:8px">📤 Submit Feedback</button>
+      </div>
+      <!-- SUCCESS -->
+      <div class="success-screen" id="fb-success">
+        <div class="success-icon">🎉</div>
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:var(--navy);margin-bottom:10px">Thank You!</h2>
+        <p style="color:var(--gray-600);line-height:1.7;margin-bottom:24px">Your feedback has been recorded and sent to our team. It truly helps us make SAKSHAR better for every student in India. We appreciate it deeply! 🙏</p>
+        <a href="dashboard.html" class="btn btn-saffron">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="main-footer"><div id="main-footer"></div></footer>
+<script src="js/shared.js"></script>
+<script>
+renderNav('feedback');
+renderFooter();
+
+// Populate dept
+const deptEl=document.getElementById('fb-dept');
+DEPT_LIST.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.label;deptEl.appendChild(o);});
+
+// Pre-fill if logged in
+const u=getCurrentUser();
+if(u&&u.fname){document.getElementById('fb-name').value=u.fname+' '+u.lname;}
+if(u&&u.dept){document.getElementById('fb-dept').value=u.dept;}
+
+let currentRating=0;
+function setRating(n){
+  currentRating=n;
+  document.querySelectorAll('.star-btn').forEach((b,i)=>{b.classList.toggle('active',i<n);});
+  const labels=['','Poor 😕','Fair 😐','Good 👍','Very Good 😊','Excellent! 🌟'];
+  document.getElementById('rating-label').textContent=labels[n];
+}
+
+function submitFeedback(){
+  const name=document.getElementById('fb-name').value.trim();
+  const dept=document.getElementById('fb-dept').value;
+  if(!name){showToast('Please enter your name','warn');return;}
+  if(!dept){showToast('Please select your department','warn');return;}
+  if(!currentRating){showToast('Please give a rating','warn');return;}
+
+  const fb={
+    name,dept,rating:currentRating,
+    like:document.getElementById('fb-like').value.trim(),
+    improve:document.getElementById('fb-improve').value.trim(),
+    category:document.getElementById('fb-category').value,
+    recommend:document.getElementById('fb-recommend').value,
+    date:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})
+  };
+
+  const feedbacks=JSON.parse(localStorage.getItem('sakshar_feedbacks')||'[]');
+  feedbacks.push(fb);
+  localStorage.setItem('sakshar_feedbacks',JSON.stringify(feedbacks));
+
+  document.getElementById('fb-form').style.display='none';
+  document.getElementById('fb-success').style.display='block';
+}
+</script>
+</body>
+</html>

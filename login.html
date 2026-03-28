@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Login — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.auth-page{min-height:100vh;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:88px 20px 40px;position:relative;overflow:hidden}
+.auth-page::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 25% 40%,rgba(255,107,0,0.13) 0%,transparent 50%),radial-gradient(circle at 75% 70%,rgba(245,166,35,0.07) 0%,transparent 40%)}
+.auth-box{background:white;border-radius:20px;width:100%;max-width:440px;box-shadow:0 24px 80px rgba(0,0,0,0.32);overflow:hidden;position:relative;z-index:2}
+.auth-header{background:var(--navy-mid);padding:36px 40px 28px;text-align:center}
+.auth-logo{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:white;letter-spacing:2px}
+.auth-logo span{color:var(--saffron)}
+.auth-title{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:700;color:white;margin-top:14px}
+.auth-subtitle{color:rgba(255,255,255,0.5);font-size:0.87rem;margin-top:5px}
+.auth-body{padding:32px 40px 40px}
+.admin-hint{background:#F3EEFF;border-radius:10px;padding:12px 14px;font-size:0.8rem;color:#7C3AED;border:1px solid rgba(124,58,237,0.2);margin-bottom:16px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-logo">SAK<span>SHAR</span></div>
+      <div class="auth-title">Welcome Back! 👋</div>
+      <div class="auth-subtitle">Login to access your resources</div>
+    </div>
+    <div class="auth-body">
+      <div class="admin-hint">🛡 <strong>Admin?</strong> Use your admin credentials to access the Admin Panel.</div>
+      <div class="form-error" id="login-error"></div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" id="login-email" placeholder="yourname@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="login-pass" placeholder="Enter your password">
+      </div>
+      <button class="btn btn-saffron btn-full" onclick="doLogin()" style="margin-bottom:16px">🔑 Login to SAKSHAR</button>
+      <div style="text-align:center;font-size:0.88rem;color:var(--gray-600);margin-bottom:10px">
+        New here? <a href="signup.html" style="color:var(--saffron);font-weight:600">Create a Free Account</a>
+      </div>
+      <div style="text-align:center">
+        <a href="index.html" style="font-size:0.82rem;color:var(--gray-400);text-decoration:none">← Back to Home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+renderNav('login');
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+
+  if(!email||!pass){err.textContent='Please fill in all fields.';err.style.display='block';return;}
+
+  // Admin check
+  if(email===ADMIN_EMAIL&&pass===ADMIN_PASS){
+    setCurrentUser({fname:'Admin',lname:'SAKSHAR',email:ADMIN_EMAIL,role:'admin'});
+    showToast('✅ Admin login successful!');
+    setTimeout(()=>{window.location.href='admin.html';},900);
+    return;
+  }
+
+  const users=getUsers();
+  const user=users.find(u=>u.email===email&&u.password===pass);
+  if(!user){err.textContent='Invalid email or password. Please try again.';err.style.display='block';return;}
+
+  setCurrentUser(user);
+  showToast('✅ Welcome back, '+user.fname+'!');
+  setTimeout(()=>{window.location.href='dashboard.html';},900);
+}
+</script>
+</body>
+</html>

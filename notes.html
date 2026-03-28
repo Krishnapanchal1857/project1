@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notes — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.content{padding:40px 60px;max-width:1300px;margin:0 auto}
+.notes-tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:32px}
+.notes-tab{padding:14px 24px;border:none;background:none;font-family:'Hind',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;color:var(--gray-600);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.notes-tab.active{color:var(--saffron);border-bottom-color:var(--saffron)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* Upload Form */
+.upload-box{background:white;border-radius:20px;padding:40px;box-shadow:var(--shadow);max-width:680px;margin:0 auto}
+.upload-drop{border:2px dashed var(--gray-200);border-radius:16px;padding:40px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream)}
+.upload-drop:hover,.upload-drop.drag-over{border-color:var(--saffron);background:var(--saffron-pale)}
+.upload-drop-icon{font-size:3rem;margin-bottom:12px}
+.upload-drop-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.upload-drop-sub{font-size:0.85rem;color:var(--gray-400)}
+/* Notes Grid */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.note-card{background:white;border-radius:var(--radius);border:1.5px solid var(--gray-200);overflow:hidden;transition:all 0.25s}
+.note-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.note-card-header{padding:18px 18px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.note-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;flex-shrink:0}
+.note-rank-badge{font-family:'Baloo 2',cursive;font-size:0.85rem;font-weight:800;padding:3px 10px;border-radius:20px}
+.note-body{padding:14px 18px}
+.note-title{font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:4px;line-height:1.3}
+.note-meta{font-size:0.78rem;color:var(--gray-400);margin-bottom:10px}
+.note-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.star-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.star{font-size:1.2rem;cursor:pointer;transition:transform 0.1s;color:#E0E0E0}
+.star.filled{color:#F5A623}
+.star:hover{transform:scale(1.2)}
+.note-stats{display:flex;gap:16px;font-size:0.78rem;color:var(--gray-400)}
+.note-actions{padding:0 18px 18px;display:flex;gap:8px}
+/* Leaderboard */
+.leaderboard-table{background:white;border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--gray-200)}
+.lb-header{background:var(--navy);padding:16px 20px;display:grid;grid-template-columns:50px 1fr 100px 100px 100px;gap:10px;font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase}
+.lb-row{padding:14px 20px;display:grid;grid-template-columns:50px 1fr 100px 100px 100px;gap:10px;border-bottom:1px solid var(--gray-100);align-items:center;transition:background 0.15s}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:var(--saffron-pale)}
+.lb-rank{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--gray-400)}
+.lb-rank.gold{color:#F5A623}
+.lb-rank.silver{color:#9CA3AF}
+.lb-rank.bronze{color:#D97706}
+.lb-name{font-weight:700;font-size:0.92rem;color:var(--navy)}
+.lb-dept{font-size:0.75rem;color:var(--gray-400);margin-top:2px}
+.lb-notes{text-align:center;font-weight:700;color:var(--navy)}
+.lb-rating{text-align:center;color:#F5A623;font-weight:700}
+.lb-points{text-align:center}
+.points-badge{background:var(--saffron);color:white;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px}
+@media(max-width:900px){.content{padding:24px 18px}.lb-header,.lb-row{grid-template-columns:40px 1fr 80px;}.lb-header>:nth-child(4),.lb-header>:nth-child(5),.lb-row>:nth-child(4),.lb-row>:nth-child(5){display:none}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+<div class="page-wrap">
+  <div class="page-band" data-bg="NOTES">
+    <div class="page-band-title">📝 Notes Community</div>
+    <div class="page-band-sub">Upload your notes • Get rated by peers • Climb the leaderboard</div>
+  </div>
+  <div class="content">
+    <div class="notes-tabs">
+      <button class="notes-tab active" onclick="switchNotesTab('browse',this)">📚 Browse Notes</button>
+      <button class="notes-tab" onclick="switchNotesTab('upload',this)">⬆️ Upload My Notes</button>
+      <button class="notes-tab" onclick="switchNotesTab('leaderboard',this)">🏆 Leaderboard</button>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div class="tab-content active" id="tab-browse">
+      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+        <select class="form-select" id="filter-dept" style="width:200px" onchange="renderNotes()">
+          <option value="">All Departments</option>
+        </select>
+        <select class="form-select" id="filter-type" style="width:180px" onchange="renderNotes()">
+          <option value="">All Types</option>
+          <option value="handwritten">Handwritten</option>
+          <option value="typed">Typed / Digital</option>
+          <option value="mind-map">Mind Maps</option>
+          <option value="formula-sheet">Formula Sheets</option>
+        </select>
+        <select class="form-select" id="filter-sort" style="width:160px" onchange="renderNotes()">
+          <option value="rating">Sort: Top Rated</option>
+          <option value="newest">Sort: Newest</option>
+          <option value="downloads">Sort: Most Downloaded</option>
+        </select>
+      </div>
+      <div class="notes-grid" id="notes-grid"></div>
+    </div>
+
+    <!-- UPLOAD TAB -->
+    <div class="tab-content" id="tab-upload">
+      <div class="upload-box">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:6px">Upload Your Notes 📝</h2>
+        <p style="color:var(--gray-600);font-size:0.92rem;margin-bottom:28px">Share your handwritten or typed notes with thousands of students. Get rated and earn points on the leaderboard!</p>
+
+        <div class="form-group">
+          <label class="form-label">Notes Title *</label>
+          <input type="text" class="form-input" id="note-title" placeholder="e.g., Organic Chemistry — Reaction Mechanisms">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Department *</label>
+            <select class="form-select" id="note-dept">
+              <option value="">Select Department</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <input type="text" class="form-input" id="note-subject" placeholder="e.g., Pharmacology II">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Semester / Year</label>
+            <input type="text" class="form-input" id="note-sem" placeholder="e.g., Semester 4">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes Type *</label>
+            <select class="form-select" id="note-type">
+              <option value="">Select Type</option>
+              <option value="handwritten">Handwritten Notes</option>
+              <option value="typed">Typed / Digital Notes</option>
+              <option value="mind-map">Mind Maps</option>
+              <option value="formula-sheet">Formula Sheets</option>
+              <option value="solved-pyq">Solved PYQ</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-input" id="note-desc" placeholder="Brief description of what topics are covered..." rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File (PDF or Images) *</label>
+          <div class="upload-drop" onclick="document.getElementById('note-file').click()" id="upload-drop">
+            <div class="upload-drop-icon">📄</div>
+            <div class="upload-drop-title">Click or drag files here</div>
+            <div class="upload-drop-sub">PDF, JPG, PNG — Max 10MB</div>
+            <div id="file-name-display" style="margin-top:10px;font-size:0.85rem;color:var(--saffron);font-weight:600;display:none"></div>
+          </div>
+          <input type="file" id="note-file" accept=".pdf,image/*" style="display:none" onchange="handleFileSelect(this)">
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.87rem;color:var(--gray-600)">
+            <input type="checkbox" id="note-agree" style="accent-color:var(--saffron)">
+            I confirm these are my own notes / I have permission to share them. They don't contain copyrighted material.
+          </label>
+        </div>
+        <button class="btn btn-saffron btn-full" onclick="submitNote()">🚀 Upload Notes & Join Leaderboard</button>
+        <div style="background:var(--saffron-pale);border-radius:10px;padding:14px;margin-top:16px;font-size:0.82rem;color:var(--gray-600);border:1px solid rgba(255,107,0,0.15)">
+          <strong style="color:var(--saffron)">🏆 How Ranking Works:</strong> After you upload, other students can rate your notes (1–5 stars). Your ranking on the leaderboard is calculated from your average rating × number of downloads. Top contributors get featured badges!
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div class="tab-content" id="tab-leaderboard">
+      <div style="background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:16px;padding:28px 32px;margin-bottom:28px;text-align:center">
+        <div style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:white;margin-bottom:6px">🏆 Notes Leaderboard</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.9rem">Top contributors ranked by ratings and downloads</div>
+      </div>
+      <div class="leaderboard-table">
+        <div class="lb-header">
+          <div>RANK</div><div>CONTRIBUTOR</div><div>NOTES</div><div>AVG RATING</div><div>POINTS</div>
+        </div>
+        <div id="leaderboard-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rating Modal -->
+<div class="modal-overlay" id="sakshar-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title" id="modal-title">Rate Notes</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer"><button class="btn btn-saffron" onclick="closeModal()">Done</button></div>
+  </div>
+</div>
+
+<footer class="main-footer"><div id="main-footer"></div></footer>
+<script src="js/shared.js"></script>
+<script>
+if(!requireAuth()){}
+renderNav('notes');
+renderFooter();
+
+const COLORS=['#FF6B00','#2563EB','#059669','#7C3AED','#DB2777','#0891B2','#65A30D','#D97706'];
+
+// Populate dept filters
+const deptSelects=['filter-dept','note-dept'];
+deptSelects.forEach(id=>{
+  const el=document.getElementById(id);
+  DEPT_LIST.forEach(d=>{
+    const o=document.createElement('option');
+    o.value=d.id;o.textContent=d.label;
+    el.appendChild(o);
+  });
+});
+
+// Sample notes data
+let NOTES_DATA=JSON.parse(localStorage.getItem('sakshar_notes')||'null');
+if(!NOTES_DATA){
+  NOTES_DATA=[
+    {id:1,title:'Organic Chemistry — All Named Reactions',author:'Priya Sharma',avatar:'P',color:'#DB2777',dept:'12sci',subject:'Chemistry',sem:'12th Grade',type:'handwritten',desc:'Complete named reactions with mechanisms for board exams',rating:4.8,ratings:142,downloads:891,date:'Jan 2025'},
+    {id:2,title:'Data Structures — Complete Notes Sem 3',author:'Rahul More',avatar:'R',color:'#2563EB',dept:'bscit',subject:'Data Structures',sem:'Semester 3',type:'typed',desc:'Full DSA notes with code examples and complexity analysis',rating:4.7,ratings:98,downloads:672,date:'Feb 2025'},
+    {id:3,title:'Pharmacology II — Drug Classifications',author:'Ananya Patil',avatar:'A',color:'#059669',dept:'pharma',subject:'Pharmacology II',sem:'Semester 5',type:'mind-map',desc:'Mind maps of all drug classifications and mechanisms',rating:4.9,ratings:76,downloads:534,date:'Feb 2025'},
+    {id:4,title:'Engineering Maths — Integration Formulas',author:'Saurabh Desai',avatar:'S',color:'#FF6B00',dept:'btech_cse',subject:'Engineering Mathematics II',sem:'Semester 2',type:'formula-sheet',desc:'All integration formulas and solved examples',rating:4.6,ratings:203,downloads:1245,date:'Jan 2025'},
+    {id:5,title:'Financial Accounting — Journal Entries',author:'Neha Kulkarni',avatar:'N',color:'#7C3AED',dept:'bcom',subject:'Financial Accounting I',sem:'Semester 1',type:'handwritten',desc:'Complete journal entries with golden rules explained',rating:4.5,ratings:87,downloads:456,date:'Mar 2025'},
+    {id:6,title:'12th History — Timeline Charts',author:'Amit Joshi',avatar:'A',color:'#0891B2',dept:'12arts',subject:'History',sem:'12th Grade',type:'mind-map',desc:'Timeline charts of all major historical events',rating:4.7,ratings:64,downloads:389,date:'Feb 2025'},
+  ];
+  localStorage.setItem('sakshar_notes',JSON.stringify(NOTES_DATA));
+}
+
+function switchNotesTab(tab,btn){
+  document.querySelectorAll('.notes-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='browse')renderNotes();
+  if(tab==='leaderboard')renderLeaderboard();
+}
+
+function renderNotes(){
+  const deptFilter=document.getElementById('filter-dept').value;
+  const typeFilter=document.getElementById('filter-type').value;
+  const sortFilter=document.getElementById('filter-sort').value;
+  let notes=[...NOTES_DATA];
+  if(deptFilter)notes=notes.filter(n=>n.dept===deptFilter);
+  if(typeFilter)notes=notes.filter(n=>n.type===typeFilter);
+  if(sortFilter==='rating')notes.sort((a,b)=>b.rating-a.rating);
+  else if(sortFilter==='newest')notes.sort((a,b)=>b.id-a.id);
+  else notes.sort((a,b)=>b.downloads-a.downloads);
+
+  const el=document.getElementById('notes-grid');
+  if(!notes.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400)">No notes found for this filter. Be the first to upload!</div>';return;}
+  el.innerHTML=notes.map(n=>{
+    const dept=DEPT_LIST.find(d=>d.id===n.dept);
+    const stars='★'.repeat(Math.round(n.rating))+'☆'.repeat(5-Math.round(n.rating));
+    return`<div class="note-card">
+      <div class="note-card-header">
+        <div class="note-avatar" style="background:${n.color}">${n.avatar}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span class="tag tag-blue">${n.type}</span>
+        </div>
+      </div>
+      <div class="note-body">
+        <div class="note-title">${n.title}</div>
+        <div class="note-meta">By ${n.author} • ${n.date}</div>
+        <div class="note-tags">
+          ${dept?`<span class="tag" style="background:${SUBJECTS[n.dept]?.bg||'#f0f0f0'};color:${SUBJECTS[n.dept]?.color||'#333'}">${dept.icon} ${dept.label}</span>`:''}
+          <span class="tag tag-purple">${n.subject}</span>
+        </div>
+        <div class="star-row">
+          <span style="color:#F5A623;letter-spacing:2px">${stars}</span>
+          <span style="font-weight:700;color:var(--navy)">${n.rating}</span>
+          <span style="font-size:0.75rem;color:var(--gray-400)">(${n.ratings} ratings)</span>
+        </div>
+        <div class="note-stats">
+          <span>⬇ ${n.downloads} downloads</span>
+          <span>⭐ ${n.rating} avg</span>
+        </div>
+      </div>
+      <div class="note-actions">
+        <button class="btn btn-saffron" style="font-size:0.78rem;padding:8px 12px;flex:2" onclick="downloadNote(${n.id})">⬇ Download</button>
+        <button class="btn btn-outline" style="font-size:0.78rem;padding:8px 12px;flex:1" onclick="rateNote(${n.id},'${n.title}')">⭐ Rate</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function downloadNote(id){
+  const note=NOTES_DATA.find(n=>n.id===id);
+  if(note){note.downloads++;localStorage.setItem('sakshar_notes',JSON.stringify(NOTES_DATA));}
+  showToast('📥 Download started!');
+  renderNotes();
+}
+
+function rateNote(id,title){
+  let selectedRating=0;
+  openModal('⭐ Rate: '+title,`
+    <div style="text-align:center">
+      <p style="color:var(--gray-600);margin-bottom:20px">How helpful were these notes?</p>
+      <div id="modal-stars" style="display:flex;justify-content:center;gap:8px;margin-bottom:16px">
+        ${[1,2,3,4,5].map(i=>`<span class="star" onclick="selectStar(${i})" style="font-size:2.5rem;cursor:pointer;color:#E0E0E0">★</span>`).join('')}
+      </div>
+      <div id="modal-rating-label" style="font-size:0.88rem;color:var(--gray-400);margin-bottom:20px">Click to rate</div>
+      <button class="btn btn-saffron btn-full" onclick="submitRating(${id})">Submit Rating</button>
+    </div>
+  `);
+}
+
+let tempRating=0;
+function selectStar(n){
+  tempRating=n;
+  const stars=document.querySelectorAll('#modal-stars .star');
+  stars.forEach((s,i)=>{s.style.color=i<n?'#F5A623':'#E0E0E0';});
+  const labels=['','Poor','Fair','Good','Very Good','Excellent! 🌟'];
+  document.getElementById('modal-rating-label').textContent=labels[n];
+}
+
+function submitRating(id){
+  if(!tempRating){showToast('Please select a star rating first','warn');return;}
+  const note=NOTES_DATA.find(n=>n.id===id);
+  if(note){
+    const total=note.rating*note.ratings+tempRating;
+    note.ratings++;
+    note.rating=Math.round((total/note.ratings)*10)/10;
+    localStorage.setItem('sakshar_notes',JSON.stringify(NOTES_DATA));
+  }
+  showToast('⭐ Rating submitted! Thank you!');
+  closeModal();
+  tempRating=0;
+  renderNotes();
+}
+
+function renderLeaderboard(){
+  const u=getCurrentUser();
+  // Build leaderboard from notes
+  const authorMap={};
+  NOTES_DATA.forEach(n=>{
+    if(!authorMap[n.author])authorMap[n.author]={name:n.author,color:n.color,avatar:n.avatar,dept:n.dept,notes:0,totalRating:0,downloads:0};
+    authorMap[n.author].notes++;
+    authorMap[n.author].totalRating+=n.rating;
+    authorMap[n.author].downloads+=n.downloads;
+  });
+  const leaders=Object.values(authorMap).map(a=>({
+    ...a,
+    avgRating:Math.round((a.totalRating/a.notes)*10)/10,
+    points:Math.round(a.avgRating*a.downloads/10)
+  })).sort((a,b)=>b.points-a.points);
+
+  const rankIcons=['🥇','🥈','🥉'];
+  const rankClasses=['gold','silver','bronze'];
+  document.getElementById('leaderboard-body').innerHTML=leaders.map((l,i)=>{
+    const dept=DEPT_LIST.find(d=>d.id===l.dept);
+    return`<div class="lb-row">
+      <div class="lb-rank ${rankClasses[i]||''}">${rankIcons[i]||'#'+(i+1)}</div>
+      <div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:${l.color};display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-family:'Baloo 2',cursive;font-size:0.9rem;flex-shrink:0">${l.avatar}</div>
+          <div>
+            <div class="lb-name">${l.name}</div>
+            <div class="lb-dept">${dept?dept.icon+' '+dept.label:l.dept}</div>
+          </div>
+        </div>
+      </div>
+      <div class="lb-notes" style="text-align:center;font-weight:700">${l.notes} notes</div>
+      <div class="lb-rating">⭐ ${l.avgRating}</div>
+      <div class="lb-points"><span class="points-badge">${l.points} pts</span></div>
+    </div>`;
+  }).join('');
+}
+
+function handleFileSelect(input){
+  const file=input.files[0];
+  if(file){
+    document.getElementById('file-name-display').textContent='✓ '+file.name;
+    document.getElementById('file-name-display').style.display='block';
+  }
+}
+
+function submitNote(){
+  const title=document.getElementById('note-title').value.trim();
+  const dept=document.getElementById('note-dept').value;
+  const subject=document.getElementById('note-subject').value.trim();
+  const type=document.getElementById('note-type').value;
+  const agree=document.getElementById('note-agree').checked;
+  const file=document.getElementById('note-file').files[0];
+
+  if(!title||!dept||!subject||!type){showToast('Please fill all required fields','warn');return;}
+  if(!agree){showToast('Please agree to the terms','warn');return;}
+  if(!file){showToast('Please select a file to upload','warn');return;}
+
+  const u=getCurrentUser();
+  const newNote={
+    id:Date.now(),
+    title,
+    author:(u?(u.fname+' '+u.lname):'Anonymous'),
+    avatar:u?u.fname[0].toUpperCase():'A',
+    color:COLORS[Math.floor(Math.random()*COLORS.length)],
+    dept,subject,
+    sem:document.getElementById('note-sem').value||'',
+    type,
+    desc:document.getElementById('note-desc').value||'',
+    rating:0,ratings:0,downloads:0,
+    date:new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'})
+  };
+  NOTES_DATA.unshift(newNote);
+  localStorage.setItem('sakshar_notes',JSON.stringify(NOTES_DATA));
+  showToast('🎉 Notes uploaded successfully! It\'s now live on the platform!');
+  // Reset form
+  ['note-title','note-subject','note-sem','note-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('note-dept').value='';
+  document.getElementById('note-type').value='';
+  document.getElementById('file-name-display').style.display='none';
+  document.getElementById('note-agree').checked=false;
+  // Switch to browse
+  document.querySelectorAll('.notes-tab')[0].click();
+}
+
+renderNotes();
+</script>
+</body>
+</html>

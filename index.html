@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SAKSHAR — India's Free Academic Resource Hub</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{min-height:100vh;background:var(--navy);display:flex;flex-direction:column;position:relative;overflow:hidden;padding-top:68px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 18% 50%,rgba(255,107,0,0.13) 0%,transparent 50%),radial-gradient(circle at 82% 20%,rgba(245,166,35,0.08) 0%,transparent 40%),repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.015) 40px,rgba(255,255,255,0.015) 41px)}
+.hero-center{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:60px 40px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:#FF8C35;font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;padding:7px 20px;border-radius:30px;margin-bottom:26px;animation:fadeDown 0.6s ease both}
+.hero-title{font-family:'Baloo 2',cursive;font-size:clamp(4.5rem,11vw,9rem);font-weight:800;color:white;line-height:0.9;letter-spacing:-3px;margin-bottom:10px;animation:fadeDown 0.6s 0.1s ease both}
+.hero-title .accent{color:var(--saffron)}
+.hero-hindi{font-family:'Tiro Devanagari Hindi',serif;font-size:1.3rem;color:rgba(255,255,255,0.4);margin-bottom:22px;animation:fadeDown 0.6s 0.2s ease both}
+.hero-sub{font-size:1.08rem;color:rgba(255,255,255,0.58);max-width:560px;line-height:1.8;margin-bottom:42px;animation:fadeDown 0.6s 0.3s ease both}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;animation:fadeDown 0.6s 0.4s ease both}
+.hero-stats{display:flex;border-top:1px solid rgba(255,255,255,0.08);animation:fadeDown 0.6s 0.5s ease both}
+.hs{flex:1;text-align:center;padding:26px 16px;border-right:1px solid rgba(255,255,255,0.08)}
+.hs:last-child{border-right:none}
+.hs-num{font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:var(--saffron);line-height:1}
+.hs-label{font-size:0.72rem;color:rgba(255,255,255,0.38);letter-spacing:1px;margin-top:3px}
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-top:32px}
+.dept-chip{background:var(--cream);border:2px solid var(--gray-200);border-radius:var(--radius);padding:20px 16px;text-align:center;cursor:pointer;transition:all 0.25s;text-decoration:none;display:block}
+.dept-chip:hover{border-color:var(--saffron);background:var(--saffron-pale);transform:translateY(-3px);box-shadow:var(--shadow)}
+.dept-icon{font-size:2rem;margin-bottom:8px;display:block}
+.dept-name{font-weight:700;font-size:0.92rem;color:var(--navy)}
+.dept-sub{font-size:0.75rem;color:var(--gray-400);margin-top:3px}
+.feature-strip{background:var(--navy);padding:56px 40px}
+.features{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:28px}
+.feat{text-align:center;color:white}
+.feat-icon{font-size:2.4rem;margin-bottom:12px}
+.feat-title{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.feat-desc{font-size:0.83rem;color:rgba(255,255,255,0.42);line-height:1.6}
+.cta-strip{background:var(--saffron);padding:60px 40px;text-align:center}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-center">
+    <div class="hero-badge">📚 India's Free Academic Resource Hub</div>
+    <h1 class="hero-title">SAK<span class="accent">SHAR</span></h1>
+    <div class="hero-hindi">सक्षर — ज्ञान की ओर एक कदम</div>
+    <p class="hero-sub">Free textbooks, reference books, notes, previous year papers & SMRITI AI — organized department-wise for every Indian student. Always free.</p>
+    <div class="hero-cta">
+      <a href="signup.html" class="btn btn-saffron" style="font-size:1rem;padding:14px 36px">🚀 Join Free — Start Learning</a>
+      <a href="login.html" class="btn btn-outline" style="font-size:1rem;padding:14px 36px;border-color:rgba(255,255,255,0.25);color:white">🔑 Already a Member</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-num">11</div><div class="hs-label">Departments</div></div>
+    <div class="hs"><div class="hs-num">300+</div><div class="hs-label">Resources</div></div>
+    <div class="hs"><div class="hs-num">PYQ</div><div class="hs-label">Real Papers</div></div>
+    <div class="hs"><div class="hs-num">🤖</div><div class="hs-label">SMRITI AI</div></div>
+    <div class="hs"><div class="hs-num">Free</div><div class="hs-label">Always</div></div>
+  </div>
+</section>
+
+<section style="background:white;padding:60px 40px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-tag reveal">Browse by Department</div>
+    <h2 class="section-heading reveal">Find Your Stream</h2>
+    <p class="section-sub reveal">Click any department to explore resources. Login required to access full content.</p>
+    <div class="dept-grid">
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">⚙️</span><div class="dept-name">B.Tech CSE</div><div class="dept-sub">Sem 1–8 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🔧</span><div class="dept-name">B.Tech Mechanical</div><div class="dept-sub">Sem 1–8 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🏗️</span><div class="dept-name">B.Tech Civil</div><div class="dept-sub">Sem 1–8 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">💊</span><div class="dept-name">Pharmacy (B.Pharm)</div><div class="dept-sub">Sem 1–8 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">💻</span><div class="dept-name">BSc IT / BCA</div><div class="dept-sub">Sem 1–6 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">📊</span><div class="dept-name">B.Com</div><div class="dept-sub">Sem 1–6 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🏛️</span><div class="dept-name">BA</div><div class="dept-sub">Sem 1–6 Full Syllabus</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🔬</span><div class="dept-name">12th Science</div><div class="dept-sub">PCM • PCB • PCMB</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">💹</span><div class="dept-name">12th Commerce</div><div class="dept-sub">All Subjects</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🎨</span><div class="dept-name">12th Arts / HSC</div><div class="dept-sub">All Subjects</div></a>
+      <a href="signup.html" class="dept-chip reveal"><span class="dept-icon">🏥</span><div class="dept-name">Nursing / GNM / ANM</div><div class="dept-sub">Year 1–3</div></a>
+    </div>
+    <div style="text-align:center;margin-top:36px">
+      <a href="signup.html" class="btn btn-saffron">Unlock All Resources →</a>
+    </div>
+  </div>
+</section>
+
+<div class="feature-strip">
+  <div class="features">
+    <div class="feat reveal"><div class="feat-icon">📖</div><div class="feat-title">Textbooks</div><div class="feat-desc">NCERT, university-prescribed books organized by subject and semester.</div></div>
+    <div class="feat reveal"><div class="feat-icon">📚</div><div class="feat-title">Reference Books</div><div class="feat-desc">Topper-recommended extra reading for deeper subject understanding.</div></div>
+    <div class="feat reveal"><div class="feat-icon">📝</div><div class="feat-title">Handwritten Notes</div><div class="feat-desc">Upload your notes, get ranked by peers, help thousands of students.</div></div>
+    <div class="feat reveal"><div class="feat-icon">🗂️</div><div class="feat-title">10 Years PYQ</div><div class="feat-desc">Real previous year papers from boards and universities 2015–2024.</div></div>
+    <div class="feat reveal"><div class="feat-icon">🤖</div><div class="feat-title">SMRITI AI</div><div class="feat-desc">Real AI-powered study assistant for doubts, notes summaries, study plans.</div></div>
+  </div>
+</div>
+
+<div class="cta-strip">
+  <h2 style="font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;color:white;margin-bottom:12px">Join SAKSHAR — It's Completely Free!</h2>
+  <p style="color:rgba(255,255,255,0.8);margin-bottom:28px;font-size:1rem">Sign up in 60 seconds and get access to all departments, resources, notes and SMRITI AI.</p>
+  <a href="signup.html" class="btn" style="background:white;color:var(--saffron);font-size:1rem;padding:14px 40px;font-weight:700">Create Free Account →</a>
+</div>
+
+<footer class="main-footer"><div id="main-footer"></div></footer>
+<script src="shared.js"></script>
+<script>
+renderNav('home');
+renderFooter();
+initReveal();
+</script>
+</body>
+</html>

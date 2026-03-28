@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.content{padding:40px 60px;max-width:1300px;margin:0 auto}
+.welcome-banner{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:20px;padding:34px 38px;display:flex;align-items:center;gap:28px;margin-bottom:36px;position:relative;overflow:hidden}
+.welcome-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:220px;height:220px;border-radius:50%;background:rgba(255,107,0,0.1)}
+.wb-av{width:68px;height:68px;border-radius:50%;background:var(--saffron);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;color:white;flex-shrink:0;border:3px solid rgba(255,255,255,0.18);position:relative;z-index:1}
+.wb-text{position:relative;z-index:1}
+.wb-greet{font-size:0.75rem;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase}
+.wb-name{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;color:white;line-height:1.1;margin:3px 0}
+.wb-dept{font-size:0.85rem;color:rgba(255,255,255,0.45)}
+.wb-actions{margin-left:auto;display:flex;gap:10px;position:relative;z-index:1;flex-wrap:wrap}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px}
+.stat-card{background:white;border-radius:var(--radius);padding:22px;border:1.5px solid var(--gray-200);transition:all 0.2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-icon{font-size:1.7rem;margin-bottom:10px}
+.stat-num{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:800;color:var(--navy);line-height:1}
+.stat-label{font-size:0.78rem;color:var(--gray-400);margin-top:3px}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-top:18px}
+.quick-card{background:white;border-radius:var(--radius);padding:22px 16px;border:1.5px solid var(--gray-200);cursor:pointer;text-align:center;transition:all 0.2s;text-decoration:none;display:block}
+.quick-card:hover{border-color:var(--saffron);background:var(--saffron-pale);transform:translateY(-2px);box-shadow:var(--shadow)}
+.qc-icon{font-size:1.9rem;margin-bottom:8px}
+.qc-label{font-weight:700;font-size:0.87rem;color:var(--navy)}
+.notice-card{background:white;border-radius:12px;padding:16px 18px;border:1.5px solid var(--gray-200);border-left-width:4px;margin-bottom:10px}
+@media(max-width:900px){.content{padding:24px 18px}.stats-grid{grid-template-columns:repeat(2,1fr)}.welcome-banner{flex-wrap:wrap}.wb-actions{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+<div class="page-wrap">
+  <div class="page-band" data-bg="DASHBOARD">
+    <div class="page-band-title">📊 My Dashboard</div>
+    <div class="page-band-sub">Your personalized SAKSHAR learning hub</div>
+  </div>
+  <div class="content">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="wb-av" id="wb-av">S</div>
+      <div class="wb-text">
+        <div class="wb-greet">Good Day,</div>
+        <div class="wb-name" id="wb-name">Student</div>
+        <div class="wb-dept" id="wb-dept">Loading...</div>
+      </div>
+      <div class="wb-actions">
+        <a href="resources.html" class="btn btn-saffron" style="font-size:0.85rem;padding:10px 18px">📚 Resources</a>
+        <a href="smriti.html" class="btn btn-outline" style="font-size:0.85rem;padding:10px 18px;border-color:rgba(255,255,255,0.3);color:white">🤖 SMRITI AI</a>
+        <a href="notes.html" class="btn" style="font-size:0.85rem;padding:10px 18px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2)">📝 Notes</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card reveal"><div class="stat-icon">📖</div><div class="stat-num">48</div><div class="stat-label">Textbooks Available</div></div>
+      <div class="stat-card reveal"><div class="stat-icon">📚</div><div class="stat-num">72</div><div class="stat-label">Reference Books</div></div>
+      <div class="stat-card reveal"><div class="stat-icon">🗂️</div><div class="stat-num">10 Yrs</div><div class="stat-label">PYQ Papers</div></div>
+      <div class="stat-card reveal"><div class="stat-icon">📝</div><div class="stat-num">120+</div><div class="stat-label">Practice Papers</div></div>
+    </div>
+
+    <!-- Quick Access -->
+    <div class="reveal">
+      <div class="section-tag">Quick Access</div>
+      <h3 style="font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:700;color:var(--navy);margin-bottom:4px">Jump Right In</h3>
+      <div class="quick-grid">
+        <a href="resources.html#textbooks" class="quick-card"><div class="qc-icon">📖</div><div class="qc-label">Textbooks</div></a>
+        <a href="resources.html#reference" class="quick-card"><div class="qc-icon">📚</div><div class="qc-label">Reference Books</div></a>
+        <a href="resources.html#notes" class="quick-card"><div class="qc-icon">✏️</div><div class="qc-label">Notes</div></a>
+        <a href="resources.html#practice" class="quick-card"><div class="qc-icon">📝</div><div class="qc-label">Practice Papers</div></a>
+        <a href="resources.html#pyq" class="quick-card"><div class="qc-icon">🗂️</div><div class="qc-label">PYQ Papers</div></a>
+        <a href="smriti.html" class="quick-card"><div class="qc-icon">🤖</div><div class="qc-label">SMRITI AI</div></a>
+        <a href="notes.html" class="quick-card"><div class="qc-icon">⬆️</div><div class="qc-label">Upload Notes</div></a>
+        <a href="feedback.html" class="quick-card"><div class="qc-icon">💬</div><div class="qc-label">Feedback</div></a>
+      </div>
+    </div>
+
+    <!-- Notices -->
+    <div style="margin-top:40px" class="reveal">
+      <div class="section-tag">Notice Board</div>
+      <h3 style="font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:700;color:var(--navy);margin-bottom:16px">Latest Updates</h3>
+      <div class="notice-card" style="border-left-color:var(--saffron)">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:3px">🆕 SMRITI AI is Now LIVE with Real Intelligence!</div>
+        <div style="font-size:0.84rem;color:var(--gray-600)">SMRITI now uses a real AI API. Ask any academic question and get intelligent answers instantly.</div>
+      </div>
+      <div class="notice-card" style="border-left-color:var(--green)">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:3px">📝 Notes Upload & Ranking System Active</div>
+        <div style="font-size:0.84rem;color:var(--gray-600)">You can now upload your handwritten or typed notes. Get rated by peers and earn rankings!</div>
+      </div>
+      <div class="notice-card" style="border-left-color:#7C3AED">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:3px">📚 All Departments Fully Updated</div>
+        <div style="font-size:0.84rem;color:var(--gray-600)">BSc IT, B.Tech (CSE/Mech/Civil), Pharmacy, B.Com — all semester-wise subjects now available.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="main-footer"><div id="main-footer"></div></footer>
+<script src="js/shared.js"></script>
+<script>
+if(!requireAuth()){}
+const u=getCurrentUser();
+if(u){
+  document.getElementById('wb-av').textContent=u.fname?u.fname[0].toUpperCase():'S';
+  document.getElementById('wb-name').textContent=(u.fname||'')+(u.lname?' '+u.lname:'');
+  const deptObj=DEPT_LIST.find(d=>d.id===u.dept);
+  document.getElementById('wb-dept').textContent=(deptObj?deptObj.icon+' '+deptObj.label:'Student')+' | '+( u.college||'');
+}
+renderNav('dashboard');
+renderFooter();
+initReveal();
+</script>
+</body>
+</html>

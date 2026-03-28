@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>About Us — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.content{padding:52px 60px;max-width:1200px;margin:0 auto}
+.about-split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:60px}
+.about-visual{background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:20px;padding:44px;text-align:center}
+.about-logo{font-family:'Baloo 2',cursive;font-size:4rem;font-weight:800;color:white;letter-spacing:4px}
+.about-logo span{color:var(--saffron)}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-top:24px}
+.mission-card{background:var(--saffron-pale);border-radius:var(--radius);padding:26px 22px;border:1.5px solid rgba(255,107,0,0.12);transition:all 0.25s}
+.mission-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.mission-icon{font-size:2rem;margin-bottom:10px}
+.mission-title{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:16px;margin-top:24px}
+.team-card{background:white;border-radius:var(--radius);padding:26px 18px;text-align:center;border:1.5px solid var(--gray-200);transition:all 0.25s}
+.team-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:var(--saffron)}
+.team-av{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:white}
+@media(max-width:900px){.content{padding:32px 20px}.about-split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+<div class="page-wrap">
+  <div class="page-band" data-bg="ABOUT">
+    <div class="page-band-title">ℹ️ About SAKSHAR</div>
+    <div class="page-band-sub">Who we are, what we believe, and why we built this</div>
+  </div>
+  <div class="content">
+    <div class="about-split">
+      <div class="reveal">
+        <div class="section-tag">Our Story</div>
+        <h2 class="section-heading">Built by Students, For Students</h2>
+        <p style="color:var(--gray-600);line-height:1.8;margin-bottom:14px;font-size:0.95rem">SAKSHAR (सक्षर) means "educated" or "literate" in Hindi. We built this platform because we saw too many students struggling to find good resources — spending money on books they could access for free, or failing exams simply because they couldn't find past papers.</p>
+        <p style="color:var(--gray-600);line-height:1.8;margin-bottom:14px;font-size:0.95rem">We are a team of students and educators who believe quality education should not depend on financial background. Every student deserves equal access — whether from Mumbai, Nagpur, or a small town in rural Maharashtra.</p>
+        <p style="color:var(--gray-600);line-height:1.8;font-size:0.95rem">SAKSHAR brings textbooks, reference materials, notes, and previous year papers into one free, organized, department-wise platform. And with SMRITI AI, every student now has a personal AI tutor available 24/7.</p>
+      </div>
+      <div class="about-visual reveal">
+        <div class="about-logo">SAK<span>SHAR</span></div>
+        <div style="font-family:'Tiro Devanagari Hindi',serif;color:rgba(255,255,255,0.4);margin-top:8px">सक्षर — ज्ञान की ओर</div>
+        <div style="display:flex;justify-content:center;gap:24px;margin-top:28px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:var(--saffron)">2025</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.35)">FOUNDED</div></div>
+          <div style="text-align:center"><div style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:var(--saffron)">11+</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.35)">DEPARTMENTS</div></div>
+          <div style="text-align:center"><div style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:var(--saffron)">Free</div><div style="font-size:0.72rem;color:rgba(255,255,255,0.35)">ALWAYS</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="section-tag">Our Mission</div>
+      <h3 class="section-heading">What We Stand For</h3>
+      <p class="section-sub">Core values that guide every decision we make.</p>
+      <div class="mission-grid">
+        <div class="mission-card"><div class="mission-icon">🆓</div><div class="mission-title">Always Free</div><p style="font-size:0.84rem;color:var(--gray-600);line-height:1.6">All resources on SAKSHAR are and will always be completely free. No paywalls, no subscriptions, no hidden charges.</p></div>
+        <div class="mission-card"><div class="mission-icon">🗂️</div><div class="mission-title">Well Organized</div><p style="font-size:0.84rem;color:var(--gray-600);line-height:1.6">Resources organized by department, semester, and subject — find what you need in seconds.</p></div>
+        <div class="mission-card"><div class="mission-icon">🏫</div><div class="mission-title">India-Focused</div><p style="font-size:0.84rem;color:var(--gray-600);line-height:1.6">Built for SPPU, Mumbai University, CBSE, Maharashtra Board, and all major Indian educational boards.</p></div>
+        <div class="mission-card"><div class="mission-icon">🤝</div><div class="mission-title">Student-First</div><p style="font-size:0.84rem;color:var(--gray-600);line-height:1.6">Every feature is designed by asking: "Does this actually help a student study better?"</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:56px" class="reveal">
+      <div class="section-tag">The Team</div>
+      <h3 class="section-heading">Meet the Builders</h3>
+      <p class="section-sub">Students who decided to build instead of complain.</p>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#FF6B00,#FF8C35)">A</div><div style="font-weight:700;font-size:0.95rem;color:var(--navy)">Ananya Kulkarni</div><div style="font-size:0.78rem;color:var(--gray-400);margin-top:3px">Project Lead & Frontend</div></div>
+        <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#2563EB,#1E40AF)">R</div><div style="font-weight:700;font-size:0.95rem;color:var(--navy)">Rahul Deshmukh</div><div style="font-size:0.78rem;color:var(--gray-400);margin-top:3px">Backend & SMRITI AI</div></div>
+        <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#059669,#047857)">P</div><div style="font-weight:700;font-size:0.95rem;color:var(--navy)">Priya Shinde</div><div style="font-size:0.78rem;color:var(--gray-400);margin-top:3px">Content & Resources</div></div>
+        <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#7C3AED,#6D28D9)">S</div><div style="font-weight:700;font-size:0.95rem;color:var(--navy)">Saurabh More</div><div style="font-size:0.78rem;color:var(--gray-400);margin-top:3px">UI/UX Designer</div></div>
+        <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#DB2777,#BE185D)">N</div><div style="font-weight:700;font-size:0.95rem;color:var(--navy)">Neha Patil</div><div style="font-size:0.78rem;color:var(--gray-400);margin-top:3px">Research & Testing</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="main-footer"><div id="main-footer"></div></footer>
+<script src="js/shared.js"></script>
+<script>renderNav('about');renderFooter();initReveal();</script>
+</body>
+</html>

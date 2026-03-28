@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sign Up — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.auth-page{min-height:100vh;background:var(--navy);display:flex;align-items:flex-start;justify-content:center;padding:88px 20px 48px;position:relative;overflow:hidden}
+.auth-page::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,107,0,0.13) 0%,transparent 50%),radial-gradient(circle at 70% 70%,rgba(245,166,35,0.07) 0%,transparent 40%)}
+.auth-box{background:white;border-radius:20px;width:100%;max-width:680px;box-shadow:0 24px 80px rgba(0,0,0,0.32);overflow:hidden;position:relative;z-index:2}
+.auth-header{background:var(--navy-mid);padding:32px 40px 24px;text-align:center}
+.auth-logo{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:white;letter-spacing:2px}
+.auth-logo span{color:var(--saffron)}
+.auth-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:700;color:white;margin-top:14px}
+.auth-subtitle{color:rgba(255,255,255,0.5);font-size:0.87rem;margin-top:5px}
+.auth-body{padding:32px 40px 40px}
+.section-divider{font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--saffron);font-weight:700;margin:24px 0 16px;display:flex;align-items:center;gap:10px}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--gray-200)}
+.id-upload{border:2px dashed var(--gray-200);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream)}
+.id-upload:hover{border-color:var(--saffron);background:var(--saffron-pale)}
+.id-upload-icon{font-size:2rem;margin-bottom:8px}
+.id-upload-text{font-size:0.88rem;color:var(--gray-600)}
+.id-preview{display:none;margin-top:12px}
+.id-preview img{max-width:200px;border-radius:8px;border:2px solid var(--saffron)}
+.progress-steps{display:flex;gap:0;margin-bottom:28px;border-radius:10px;overflow:hidden}
+.step{flex:1;padding:10px 6px;text-align:center;font-size:0.75rem;font-weight:600;background:var(--gray-100);color:var(--gray-400);transition:all 0.3s;border-right:2px solid white}
+.step:last-child{border-right:none}
+.step.active{background:var(--saffron);color:white}
+.step.done{background:var(--green);color:white}
+.form-page{display:none}
+.form-page.active{display:block}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-logo">SAK<span>SHAR</span></div>
+      <div class="auth-title">Create Your Account 🎓</div>
+      <div class="auth-subtitle">Complete your profile to unlock all resources</div>
+    </div>
+    <div class="auth-body">
+      <!-- Progress -->
+      <div class="progress-steps">
+        <div class="step active" id="step1-ind">1. Personal Info</div>
+        <div class="step" id="step2-ind">2. Academic Info</div>
+        <div class="step" id="step3-ind">3. ID & Verify</div>
+      </div>
+
+      <div class="form-error" id="signup-error"></div>
+      <div class="form-success" id="signup-success"></div>
+
+      <!-- PAGE 1: Personal -->
+      <div class="form-page active" id="form-page-1">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name *</label><input type="text" class="form-input" id="fname" placeholder="Rahul"></div>
+          <div class="form-group"><label class="form-label">Last Name *</label><input type="text" class="form-input" id="lname" placeholder="Sharma"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email Address *</label><input type="email" class="form-input" id="email" placeholder="rahul@email.com"></div>
+        <div class="form-group"><label class="form-label">Mobile Number *</label><input type="tel" class="form-input" id="mobile" placeholder="+91 98765 43210" maxlength="13"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Password * (min 6 chars)</label><input type="password" class="form-input" id="pass" placeholder="••••••••"></div>
+          <div class="form-group"><label class="form-label">Confirm Password *</label><input type="password" class="form-input" id="pass2" placeholder="••••••••"></div>
+        </div>
+        <button class="btn btn-saffron btn-full" onclick="goStep(2)">Next: Academic Info →</button>
+      </div>
+
+      <!-- PAGE 2: Academic -->
+      <div class="form-page" id="form-page-2">
+        <div class="form-group">
+          <label class="form-label">Department / Stream *</label>
+          <select class="form-select" id="dept">
+            <option value="">-- Select Your Department --</option>
+            <option value="12sci">12th Science (PCM / PCB / PCMB)</option>
+            <option value="12com">12th Commerce</option>
+            <option value="12arts">12th Arts / HSC</option>
+            <option value="bscit">BSc IT / BCA / MCA</option>
+            <option value="bcom">B.Com / M.Com</option>
+            <option value="ba">BA (Arts)</option>
+            <option value="btech_cse">B.Tech / B.E — CSE / IT / AI / DS</option>
+            <option value="btech_mech">B.Tech / B.E — Mechanical Engineering</option>
+            <option value="btech_civil">B.Tech / B.E — Civil Engineering</option>
+            <option value="pharma">Pharmacy (D.Pharm / B.Pharm)</option>
+            <option value="nursing">Nursing / GNM / ANM</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Current Year / Semester *</label>
+            <select class="form-select" id="year">
+              <option value="">Select</option>
+              <option>11th Grade</option><option>12th Grade</option>
+              <option>1st Year / Sem 1-2</option><option>2nd Year / Sem 3-4</option>
+              <option>3rd Year / Sem 5-6</option><option>4th Year / Sem 7-8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">State *</label>
+            <select class="form-select" id="state">
+              <option value="">Select State</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">School / College Name *</label><input type="text" class="form-input" id="college" placeholder="e.g., SPPU College of Engineering, Pune"></div>
+        <div class="form-group"><label class="form-label">College / School UID / Roll Number *</label><input type="text" class="form-input" id="uid" placeholder="e.g., MH22CS001 or Roll No. 12345"></div>
+        <div class="form-group"><label class="form-label">City / Town</label><input type="text" class="form-input" id="city" placeholder="e.g., Pune, Nagpur, Mumbai"></div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-outline" onclick="goStep(1)" style="flex:1">← Back</button>
+          <button class="btn btn-saffron" onclick="goStep(3)" style="flex:2">Next: ID Verification →</button>
+        </div>
+      </div>
+
+      <!-- PAGE 3: ID & Final -->
+      <div class="form-page" id="form-page-3">
+        <div class="form-group">
+          <label class="form-label">Upload ID Card Photo (College/School) *</label>
+          <div class="id-upload" onclick="document.getElementById('id-file').click()">
+            <div class="id-upload-icon">🪪</div>
+            <div class="id-upload-text"><strong>Click to upload</strong> your student ID card<br><span style="font-size:0.78rem;color:var(--gray-400)">JPG, PNG, PDF — Max 2MB</span></div>
+            <div class="id-preview" id="id-preview"><img id="id-img" src="" alt="ID Preview"></div>
+          </div>
+          <input type="file" id="id-file" accept="image/*,application/pdf" style="display:none" onchange="previewID(this)">
+          <div style="font-size:0.78rem;color:var(--gray-400);margin-top:6px">Your ID is securely stored and only visible to SAKSHAR admins for verification.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Verification (Optional)</label>
+          <div style="background:var(--saffron-pale);border-radius:10px;padding:14px 16px;border:1.5px solid rgba(255,107,0,0.15)">
+            <div style="font-size:0.88rem;color:var(--navy);font-weight:600;margin-bottom:4px">📧 Verify Your Email Later</div>
+            <div style="font-size:0.82rem;color:var(--gray-600)">You can verify your email after registration. It's optional but helps with account recovery.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.85rem;color:var(--gray-600)">
+            <input type="checkbox" id="agree" style="margin-top:2px;accent-color:var(--saffron)">
+            I agree to SAKSHAR's terms. My data will only be used for academic purposes and visible to admins.
+          </label>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-outline" onclick="goStep(2)" style="flex:1">← Back</button>
+          <button class="btn btn-saffron" onclick="doSignup()" style="flex:2">🎓 Create My Account</button>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:0.88rem;color:var(--gray-600)">
+          Already a member? <a href="login.html" style="color:var(--saffron);font-weight:600">Login here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+renderNav('signup');
+
+// Populate states
+const stateEl=document.getElementById('state');
+INDIAN_STATES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;stateEl.appendChild(o);});
+
+let idBase64='';
+
+function previewID(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>2*1024*1024){showToast('File too large! Max 2MB','warn');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    idBase64=e.target.result;
+    if(file.type.startsWith('image/')){
+      document.getElementById('id-img').src=e.target.result;
+      document.getElementById('id-preview').style.display='block';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function goStep(n){
+  const err=document.getElementById('signup-error');
+  err.style.display='none';
+
+  if(n===2){
+    const fname=document.getElementById('fname').value.trim();
+    const lname=document.getElementById('lname').value.trim();
+    const email=document.getElementById('email').value.trim();
+    const mobile=document.getElementById('mobile').value.trim();
+    const pass=document.getElementById('pass').value;
+    const pass2=document.getElementById('pass2').value;
+    if(!fname||!lname||!email||!mobile||!pass){err.textContent='Please fill all required fields.';err.style.display='block';return;}
+    if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return;}
+    if(pass!==pass2){err.textContent='Passwords do not match.';err.style.display='block';return;}
+    const users=getUsers();
+    if(users.find(u=>u.email===email)){err.textContent='An account with this email already exists.';err.style.display='block';return;}
+  }
+  if(n===3){
+    const dept=document.getElementById('dept').value;
+    const year=document.getElementById('year').value;
+    const state=document.getElementById('state').value;
+    const college=document.getElementById('college').value.trim();
+    const uid=document.getElementById('uid').value.trim();
+    if(!dept||!year||!state||!college||!uid){err.textContent='Please fill all academic details.';err.style.display='block';return;}
+  }
+
+  [1,2,3].forEach(i=>{
+    document.getElementById('form-page-'+i).classList.remove('active');
+    const ind=document.getElementById('step'+i+'-ind');
+    ind.classList.remove('active','done');
+    if(i<n)ind.classList.add('done');
+    else if(i===n)ind.classList.add('active');
+  });
+  document.getElementById('form-page-'+n).classList.add('active');
+}
+
+function doSignup(){
+  const err=document.getElementById('signup-error');
+  const suc=document.getElementById('signup-success');
+  err.style.display='none';suc.style.display='none';
+
+  if(!document.getElementById('agree').checked){err.textContent='Please agree to the terms to continue.';err.style.display='block';return;}
+
+  const user={
+    fname:document.getElementById('fname').value.trim(),
+    lname:document.getElementById('lname').value.trim(),
+    email:document.getElementById('email').value.trim(),
+    mobile:document.getElementById('mobile').value.trim(),
+    password:document.getElementById('pass').value,
+    dept:document.getElementById('dept').value,
+    year:document.getElementById('year').value,
+    state:document.getElementById('state').value,
+    city:document.getElementById('city').value.trim(),
+    college:document.getElementById('college').value.trim(),
+    uid:document.getElementById('uid').value.trim(),
+    idCard:idBase64||'(Not uploaded)',
+    emailVerified:false,
+    joinDate:new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),
+    joinTimestamp:Date.now()
+  };
+
+  const users=getUsers();
+  users.push(user);
+  saveUsers(users);
+  setCurrentUser(user);
+
+  suc.textContent='🎉 Account created! Redirecting to your dashboard...';
+  suc.style.display='block';
+  setTimeout(()=>{window.location.href='dashboard.html';},1300);
+}
+</script>
+</body>
+</html>

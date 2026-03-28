@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Panel — SAKSHAR</title>
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.admin-layout{display:flex;min-height:calc(100vh - 68px)}
+.admin-sidebar{width:220px;flex-shrink:0;background:var(--navy);padding:24px 0}
+.admin-menu-title{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:8px 20px;font-weight:700}
+.admin-menu-btn{width:100%;text-align:left;padding:12px 20px;border:none;background:none;color:rgba(255,255,255,0.6);font-family:'Hind',sans-serif;font-size:0.88rem;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
+.admin-menu-btn:hover,.admin-menu-btn.active{background:rgba(255,107,0,0.15);color:white;border-left-color:var(--saffron)}
+.admin-main{flex:1;background:var(--gray-100);padding:32px;overflow-y:auto}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.admin-card{background:white;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+.admin-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.admin-stat{background:white;border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow)}
+.ast-num{font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:var(--saffron);line-height:1}
+.ast-label{font-size:0.78rem;color:var(--gray-400);margin-top:4px}
+.data-table{width:100%;border-collapse:collapse;font-size:0.85rem}
+.data-table th{background:var(--navy);color:rgba(255,255,255,0.7);padding:10px 12px;text-align:left;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.data-table td{padding:11px 12px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
+.data-table tr:hover td{background:var(--saffron-pale)}
+.data-table tr:last-child td{border-bottom:none}
+.user-chip{display:inline-flex;align-items:center;gap:8px}
+.user-chip-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:0.82rem;font-family:'Baloo 2',cursive;flex-shrink:0}
+.status-badge{font-size:0.7rem;padding:3px 8px;border-radius:12px;font-weight:700}
+.status-verified{background:#EDFAF2;color:#059669}
+.status-pending{background:#FFF3E8;color:#D97706}
+.search-filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.admin-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--gray-200)}
+.view-btn{padding:5px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;border:none;cursor:pointer;font-family:'Hind',sans-serif;transition:all 0.15s}
+.view-btn.blue{background:#EBF3FF;color:#2563EB}
+.view-btn.blue:hover{background:#2563EB;color:white}
+.view-btn.red{background:#FFEEEE;color:#DC2626}
+.view-btn.red:hover{background:#DC2626;color:white}
+.feedback-card{background:white;border-radius:12px;padding:18px;border:1.5px solid var(--gray-200);margin-bottom:12px}
+.fb-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.fb-stars{color:#F5A623;font-size:1rem}
+.fb-body{font-size:0.88rem;color:var(--gray-600);line-height:1.6}
+.export-btn{margin-left:auto}
+@media(max-width:900px){.admin-layout{flex-direction:column}.admin-sidebar{width:100%;padding:12px 0;display:flex;overflow-x:auto}.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">SAK<span>SHAR</span></a>
+  <div id="main-nav-links" class="nav-links"></div>
+</nav>
+<div class="page-wrap">
+  <div class="page-band" data-bg="ADMIN" style="background:linear-gradient(135deg,#1a0533,#2d1b69)">
+    <div class="page-band-title">🛡 Admin Control Panel</div>
+    <div class="page-band-sub">Manage students, resources, notes, and platform data</div>
+  </div>
+
+  <div class="admin-layout">
+
+    <div class="admin-sidebar">
+      <div class="admin-menu-title">Navigation</div>
+      <button class="admin-menu-btn active" onclick="adminTab('overview',this)">📊 Overview</button>
+      <button class="admin-menu-btn" onclick="adminTab('students',this)">👨‍🎓 All Students</button>
+      <button class="admin-menu-btn" onclick="adminTab('pending',this)">⏳ Pending Verifications</button>
+      <button class="admin-menu-btn" onclick="adminTab('notes',this)">📝 Uploaded Notes</button>
+      <button class="admin-menu-btn" onclick="adminTab('feedback',this)">💬 Feedback</button>
+      <div style="margin-top:24px">
+        <div class="admin-menu-title">Admin Info</div>
+        <div style="padding:12px 20px;font-size:0.8rem;color:rgba(255,255,255,0.35);line-height:1.7">
+          Logged in as:<br><span style="color:white;font-weight:600">Admin SAKSHAR</span><br>
+          <span style="font-size:0.72rem">admin@sakshar.edu</span>
+        </div>
+      </div>
+    </div>
+
+  
+    <div class="admin-main">
+
+      <div class="admin-section active" id="sec-overview">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:20px">Platform Overview</h2>
+        <div class="admin-stat-grid">
+          <div class="admin-stat"><div class="ast-num" id="stat-total">0</div><div class="ast-label">Total Students</div></div>
+          <div class="admin-stat"><div class="ast-num" id="stat-verified">0</div><div class="ast-label">Email Verified</div></div>
+          <div class="admin-stat"><div class="ast-num" id="stat-notes">0</div><div class="ast-label">Notes Uploaded</div></div>
+          <div class="admin-stat"><div class="ast-num" id="stat-depts">11</div><div class="ast-label">Departments</div></div>
+        </div>
+        <div class="admin-card">
+          <h3 style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:16px">Department Distribution</h3>
+          <div id="dept-dist"></div>
+        </div>
+        <div class="admin-card">
+          <h3 style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:16px">Recent Registrations</h3>
+          <div id="recent-regs"></div>
+        </div>
+      </div>
+
+   
+      <div class="admin-section" id="sec-students">
+        <div style="display:flex;align-items:center;margin-bottom:20px">
+          <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy)">All Registered Students</h2>
+          <button class="btn btn-saffron export-btn" style="font-size:0.82rem;padding:8px 18px" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+        <div class="search-filters">
+          <input type="text" class="form-input" id="admin-search" placeholder="🔍 Search by name, email, college..." style="max-width:280px" oninput="renderStudentTable()">
+          <select class="form-select" id="admin-filter-dept" style="width:180px" onchange="renderStudentTable()">
+            <option value="">All Departments</option>
+          </select>
+          <select class="form-select" id="admin-filter-state" style="width:160px" onchange="renderStudentTable()">
+            <option value="">All States</option>
+          </select>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="data-table" id="student-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Student</th><th>Email</th><th>Mobile</th>
+                <th>Department</th><th>College</th><th>UID/Roll No</th>
+                <th>State</th><th>Year</th><th>Joined</th><th>ID Card</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="student-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+  
+      <div class="admin-section" id="sec-pending">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:20px">Pending Verifications</h2>
+        <div id="pending-list"></div>
+      </div>
+
+      <div class="admin-section" id="sec-notes">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:20px">All Uploaded Notes</h2>
+        <div class="admin-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Department</th><th>Type</th><th>Rating</th><th>Downloads</th><th>Action</th></tr></thead>
+            <tbody id="notes-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-section" id="sec-feedback">
+        <h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:20px">Student Feedback</h2>
+        <div id="feedback-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sakshar-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-header"><div class="modal-title" id="modal-title">Student Details</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer"><button class="btn btn-saffron" onclick="closeModal()">Close</button></div>
+  </div>
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+if(!requireAdmin()){}
+renderNav('admin');
+
+const AVATAR_COLORS=['#FF6B00','#2563EB','#059669','#7C3AED','#DB2777','#0891B2','#65A30D','#D97706'];
+
+function adminTab(sec,btn){
+  document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-'+sec).classList.add('active');
+  if(sec==='overview')renderOverview();
+  if(sec==='students')renderStudentTable();
+  if(sec==='pending')renderPending();
+  if(sec==='notes')renderAdminNotes();
+  if(sec==='feedback')renderFeedback();
+}
+
+function getStudents(){return getUsers().filter(u=>u.email!==ADMIN_EMAIL);}
+
+function renderOverview(){
+  const students=getStudents();
+  const notes=JSON.parse(localStorage.getItem('sakshar_notes')||'[]');
+  document.getElementById('stat-total').textContent=students.length;
+  document.getElementById('stat-verified').textContent=students.filter(s=>s.emailVerified).length;
+  document.getElementById('stat-notes').textContent=notes.length;
+
+  const deptCount={};
+  students.forEach(s=>{deptCount[s.dept]=(deptCount[s.dept]||0)+1;});
+  const el=document.getElementById('dept-dist');
+  if(!Object.keys(deptCount).length){el.innerHTML='<p style="color:var(--gray-400)">No students registered yet.</p>';return;}
+  el.innerHTML=Object.entries(deptCount).sort((a,b)=>b[1]-a[1]).map(([id,count])=>{
+    const dept=DEPT_LIST.find(d=>d.id===id);
+    const pct=Math.round(count/students.length*100);
+    return`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:120px;font-size:0.82rem;color:var(--navy);font-weight:600;flex-shrink:0">${dept?dept.icon+' '+dept.label:id}</div>
+      <div style="flex:1;height:10px;background:var(--gray-100);border-radius:5px;overflow:hidden">
+        <div style="height:100%;background:var(--saffron);border-radius:5px;width:${pct}%;transition:width 0.8s"></div>
+      </div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--navy);width:40px;text-align:right">${count}</div>
+    </div>`;
+  }).join('');
+
+  const recent=students.slice(-5).reverse();
+  document.getElementById('recent-regs').innerHTML=recent.length?recent.map(s=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+      <div style="width:36px;height:36px;border-radius:50%;background:${AVATAR_COLORS[Math.abs(s.fname.charCodeAt(0))%AVATAR_COLORS.length]};display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-family:'Baloo 2',cursive;font-size:0.9rem">${s.fname[0]}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:0.9rem;color:var(--navy)">${s.fname} ${s.lname}</div>
+        <div style="font-size:0.75rem;color:var(--gray-400)">${s.college||'College not provided'} • ${s.state||''}</div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--gray-400)">${s.joinDate||'Recently'}</div>
+    </div>`).join('')
+    :'<p style="color:var(--gray-400)">No students yet.</p>';
+}
+
+function populateFilters(){
+  const deptEl=document.getElementById('admin-filter-dept');
+  if(deptEl&&deptEl.options.length===1){
+    DEPT_LIST.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.label;deptEl.appendChild(o);});
+  }
+  const stateEl=document.getElementById('admin-filter-state');
+  if(stateEl&&stateEl.options.length===1){
+    const students=getStudents();
+    const states=[...new Set(students.map(s=>s.state).filter(Boolean))];
+    states.forEach(st=>{const o=document.createElement('option');o.value=st;o.textContent=st;stateEl.appendChild(o);});
+  }
+}
+
+function renderStudentTable(){
+  populateFilters();
+  const students=getStudents();
+  const search=(document.getElementById('admin-search')?.value||'').toLowerCase();
+  const deptF=document.getElementById('admin-filter-dept')?.value||'';
+  const stateF=document.getElementById('admin-filter-state')?.value||'';
+
+  let filtered=students;
+  if(search)filtered=filtered.filter(s=>(s.fname+' '+s.lname+' '+s.email+' '+s.college+' '+s.uid).toLowerCase().includes(search));
+  if(deptF)filtered=filtered.filter(s=>s.dept===deptF);
+  if(stateF)filtered=filtered.filter(s=>s.state===stateF);
+
+  const tbody=document.getElementById('student-tbody');
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:24px;color:var(--gray-400)">No students found.</td></tr>';return;}
+  tbody.innerHTML=filtered.map((s,i)=>{
+    const dept=DEPT_LIST.find(d=>d.id===s.dept);
+    const color=AVATAR_COLORS[Math.abs((s.fname||'S').charCodeAt(0))%AVATAR_COLORS.length];
+    return`<tr>
+      <td style="color:var(--gray-400);font-size:0.8rem">${i+1}</td>
+      <td><div class="user-chip">
+        <div class="user-chip-av" style="background:${color}">${(s.fname||'?')[0]}</div>
+        <div><div style="font-weight:700;font-size:0.88rem">${s.fname||''} ${s.lname||''}</div>
+        <span class="status-badge ${s.emailVerified?'status-verified':'status-pending'}">${s.emailVerified?'✓ Verified':'Pending'}</span></div>
+      </div></td>
+      <td style="font-size:0.82rem">${s.email||'—'}</td>
+      <td style="font-size:0.82rem">${s.mobile||'—'}</td>
+      <td><span class="tag tag-blue" style="font-size:0.72rem">${dept?dept.icon+' '+dept.label:s.dept||'—'}</span></td>
+      <td style="font-size:0.82rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.college||'—'}</td>
+      <td style="font-size:0.82rem">${s.uid||'—'}</td>
+      <td style="font-size:0.82rem">${s.state||'—'}</td>
+      <td style="font-size:0.82rem">${s.year||'—'}</td>
+      <td style="font-size:0.78rem;color:var(--gray-400)">${s.joinDate||'—'}</td>
+      <td>${s.idCard&&s.idCard!=='(Not uploaded)'?`<button class="view-btn blue" onclick="viewIDCard(${JSON.stringify(s).replace(/"/g,'&quot;')})">View ID</button>`:'<span style="font-size:0.75rem;color:var(--gray-400)">Not uploaded</span>'}</td>
+      <td><button class="view-btn blue" onclick="viewStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})">Details</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function viewStudent(s){
+  const dept=DEPT_LIST.find(d=>d.id===s.dept);
+  openModal('👤 '+s.fname+' '+s.lname,`
+    <div style="display:grid;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">FULL NAME</div><div style="font-weight:700;font-size:0.92rem">${s.fname} ${s.lname}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">EMAIL</div><div style="font-weight:700;font-size:0.88rem">${s.email}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">MOBILE</div><div style="font-weight:700">${s.mobile||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">DEPARTMENT</div><div style="font-weight:700">${dept?dept.icon+' '+dept.label:s.dept}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">COLLEGE / SCHOOL</div><div style="font-weight:700;font-size:0.88rem">${s.college||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">UID / ROLL NO</div><div style="font-weight:700">${s.uid||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">STATE</div><div style="font-weight:700">${s.state||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">CITY</div><div style="font-weight:700">${s.city||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">YEAR / SEM</div><div style="font-weight:700">${s.year||'—'}</div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px"><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:2px">JOINED</div><div style="font-weight:700">${s.joinDate||'—'}</div></div>
+      </div>
+      <div style="background:${s.emailVerified?'#EDFAF2':'#FFF3E8'};border-radius:8px;padding:12px">
+        <span class="status-badge ${s.emailVerified?'status-verified':'status-pending'}" style="font-size:0.82rem">${s.emailVerified?'✓ Email Verified':'⏳ Email Pending Verification'}</span>
+      </div>
+      ${s.idCard&&s.idCard!=='(Not uploaded)'&&s.idCard.startsWith('data:image')?`<div><div style="font-size:0.7rem;color:var(--gray-400);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">ID CARD</div><img src="${s.idCard}" style="max-width:100%;border-radius:8px;border:2px solid var(--gray-200)"></div>`:''}
+    </div>
+  `);
+}
+
+function viewIDCard(s){
+  if(s.idCard&&s.idCard.startsWith('data:image')){
+    openModal('🪪 ID Card — '+s.fname+' '+s.lname,`<img src="${s.idCard}" style="max-width:100%;border-radius:8px">`);
+  }else{
+    showToast('No image ID card uploaded','warn');
+  }
+}
+
+function renderPending(){
+  const students=getStudents().filter(s=>!s.emailVerified);
+  const el=document.getElementById('pending-list');
+  if(!students.length){el.innerHTML='<div style="background:white;border-radius:12px;padding:32px;text-align:center;color:var(--gray-400)"><div style="font-size:2rem;margin-bottom:10px">✅</div>No pending verifications!</div>';return;}
+  el.innerHTML=students.map(s=>{
+    const dept=DEPT_LIST.find(d=>d.id===s.dept);
+    return`<div class="admin-card" style="display:flex;align-items:center;gap:16px">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--saffron);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-family:'Baloo 2',cursive;font-size:1.1rem;flex-shrink:0">${(s.fname||'?')[0]}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;color:var(--navy)">${s.fname} ${s.lname}</div>
+        <div style="font-size:0.82rem;color:var(--gray-400)">${s.email} • ${s.college||'College not provided'}</div>
+        <div style="margin-top:4px"><span class="tag tag-orange">⏳ Email Not Verified</span> ${dept?`<span class="tag tag-blue" style="margin-left:6px">${dept.label}</span>`:''}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="view-btn blue" onclick="verifyStudent('${s.email}')">✓ Verify</button>
+        <button class="view-btn blue" onclick="viewStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})">View</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function verifyStudent(email){
+  const users=getUsers();
+  const user=users.find(u=>u.email===email);
+  if(user){user.emailVerified=true;saveUsers(users);showToast('✅ '+email+' verified!');}
+  renderPending();
+}
+
+function renderAdminNotes(){
+  const notes=JSON.parse(localStorage.getItem('sakshar_notes')||'[]');
+  const tbody=document.getElementById('notes-tbody');
+  if(!notes.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--gray-400)">No notes uploaded yet.</td></tr>';return;}
+  tbody.innerHTML=notes.map((n,i)=>{
+    const dept=DEPT_LIST.find(d=>d.id===n.dept);
+    return`<tr>
+      <td style="color:var(--gray-400)">${i+1}</td>
+      <td style="font-weight:700;font-size:0.88rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n.title}</td>
+      <td style="font-size:0.85rem">${n.author}</td>
+      <td><span class="tag tag-blue" style="font-size:0.7rem">${dept?dept.label:n.dept}</span></td>
+      <td style="font-size:0.8rem">${n.type}</td>
+      <td style="color:#F5A623;font-weight:700">⭐ ${n.rating}</td>
+      <td style="font-weight:700">${n.downloads}</td>
+      <td><button class="view-btn red" onclick="deleteNote(${n.id})">Delete</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteNote(id){
+  if(!confirm('Delete this note?'))return;
+  let notes=JSON.parse(localStorage.getItem('sakshar_notes')||'[]');
+  notes=notes.filter(n=>n.id!==id);
+  localStorage.setItem('sakshar_notes',JSON.stringify(notes));
+  showToast('Note deleted');
+  renderAdminNotes();
+}
+
+function renderFeedback(){
+  const feedbacks=JSON.parse(localStorage.getItem('sakshar_feedbacks')||'[]');
+  const el=document.getElementById('feedback-list');
+  if(!feedbacks.length){el.innerHTML='<div style="background:white;border-radius:12px;padding:32px;text-align:center;color:var(--gray-400)"><div style="font-size:2rem;margin-bottom:10px">💬</div>No feedback submitted yet.</div>';return;}
+  el.innerHTML=feedbacks.map(f=>`
+    <div class="feedback-card">
+      <div class="fb-header">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--saffron);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-family:'Baloo 2',cursive">${(f.name||'?')[0]}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;color:var(--navy)">${f.name}</div>
+          <div style="font-size:0.78rem;color:var(--gray-400)">${f.dept} • ${f.category||'General'} • ${f.date||''}</div>
+        </div>
+        <div class="fb-stars">${'★'.repeat(f.rating||0)}${'☆'.repeat(5-(f.rating||0))}</div>
+      </div>
+      <div class="fb-body">
+        ${f.like?`<div style="margin-bottom:6px"><strong>👍 Liked:</strong> ${f.like}</div>`:''}
+        ${f.improve?`<div><strong>💡 Improve:</strong> ${f.improve}</div>`:''}
+        ${f.recommend?`<div style="margin-top:6px"><strong>🔁 Recommend:</strong> ${f.recommend}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function exportCSV(){
+  const students=getStudents();
+  if(!students.length){showToast('No students to export','warn');return;}
+  const headers=['#','First Name','Last Name','Email','Mobile','Department','Year/Sem','State','City','College','UID/Roll No','Joined','Email Verified'];
+  const rows=students.map((s,i)=>[i+1,s.fname,s.lname,s.email,s.mobile,s.dept,s.year,s.state,s.city,s.college,s.uid,s.joinDate,s.emailVerified?'Yes':'No']);
+  const csv=[headers,...rows].map(r=>r.map(c=>`"${c||''}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='sakshar_students_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('📥 CSV exported successfully!');
+}
+
+renderOverview();
+</script>
+</body>
+</html>
